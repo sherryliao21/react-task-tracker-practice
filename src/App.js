@@ -1,11 +1,27 @@
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTasks from './components/AddTask'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
   const [showAdd, setShowAdd] = useState(false)
   const [tasks, setTasks] = useState([])
+
+  // things to show when page load (side effect)
+  useEffect(() => {
+    const getTasks = async () => {
+      const taskFromServer = await fetchTasks()
+      setTasks(taskFromServer)
+    }
+    getTasks()
+  }, [])
+
+  // Fetch Tasks
+  const fetchTasks = async () => {
+    const res = await fetch('http://localhost:5000/tasks')
+    const data = await res.json()
+    return data
+  }
 
   // Add Tasks
   const addTask = (task) => {
